@@ -7,15 +7,12 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/server"
+	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/appServer"
 )
 
 func main() {
 	fmt.Println("Simple HTTP Server start...")
 	defer fmt.Println("Simple HTTP Server finish work.")
-	s := NewServer()
-
-	//http.HandleFunc("/about", aboutHandler)
-	//http.HandleFunc("/", indexHandler)
-	log.Fatal(s.routes())
+	srv := appServer{false}
+	log.Fatal(srv.Run())
 }
