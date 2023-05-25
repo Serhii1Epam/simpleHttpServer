@@ -17,5 +17,5 @@ func main() {
 
 	//http.HandleFunc("/about", aboutHandler)
 	//http.HandleFunc("/", indexHandler)
-	log.Fatal(s.Run())
+	log.Fatal(s.routes())
 }

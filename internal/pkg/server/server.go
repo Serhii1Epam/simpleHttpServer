@@ -10,7 +10,7 @@ import (
 )
 
 type server struct {
-	db     *memdb
+	db     *inMemoryDataBase
 	router *simpleHttpRouter
 }
 
@@ -20,24 +20,26 @@ func NewServer() *server {
 	return s
 }
 
-func (s *server) ServeHTTP(w *http.ResponseWriter, r http.Request) {
-	s.router(ServeHTTP(w, r))
+func (s *server) routes() {
+	s.router("/exit", s.handleExit())
+	s.router("/about", s.handleAbout())
+	s.router("/", s.handleIndex())
 }
 
-func HandleAbout(w http.ResponseWriter, r *http.Request) {
+func handleAbout(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
 	fmt.Fprintf(w, "Method [%v]\n", r.Method)
 	fmt.Fprintf(w, "Simple HTTP Server developed for GO switch program.\n")
 }
 
-func HandleExit(w http.ResponseWriter, r *http.Request) {
+func handleExit(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
 	fmt.Fprintf(w, "Method [%v]\n", r.Method)
 	fmt.Fprintf(w, "Closing Simple HTTP Server...\n")
 	os.Exit(1)
 }
 
-func HandleIndex(w http.ResponseWriter, r *http.Request) {
+func handleIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Process [%v] method...\n", r.Method)
 	switch r.Method {
 	case "GET":
