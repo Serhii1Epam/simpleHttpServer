@@ -13,6 +13,8 @@ import (
 func main() {
 	fmt.Println("Simple HTTP Server start...")
 	defer fmt.Println("Simple HTTP Server finish work.")
+
 	srv := appserver{false}
+
 	log.Fatal(srv.Run())
 }
