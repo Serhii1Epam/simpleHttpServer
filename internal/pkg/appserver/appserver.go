@@ -11,7 +11,7 @@ import (
 )
 
 type Appserver struct {
-	is_runned bool
+	Is_runned bool
 }
 
 func (s *Appserver) Run() {
