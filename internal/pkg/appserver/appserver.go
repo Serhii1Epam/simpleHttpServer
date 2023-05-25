@@ -9,11 +9,11 @@ import (
 	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/hasher"
 )
 
-type appserver struct {
+type Appserver struct {
 	is_runned bool
 }
 
-func (s *appserver) Run() {
+func (s *Appserver) Run() {
 	http.HandleFunc("/exit", handleExit)
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
@@ -53,4 +53,3 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
