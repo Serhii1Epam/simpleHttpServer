@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/appServer"
+	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/appserver"
 )
 
 func main() {
 	fmt.Println("Simple HTTP Server start...")
 	defer fmt.Println("Simple HTTP Server finish work.")
-	srv := appServer{false}
+	srv := appserver{false}
 	log.Fatal(srv.Run())
 }

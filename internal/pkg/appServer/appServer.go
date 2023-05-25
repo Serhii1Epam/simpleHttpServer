@@ -1,5 +1,5 @@
 // Server package
-package appServer
+package appserver
 
 import (
 	"fmt"
@@ -9,11 +9,11 @@ import (
 	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/hasher"
 )
 
-type appServer struct {
+type appserver struct {
 	is_runned bool
 }
 
-func (s *appServer) Run() {
+func (s *appserver) Run() {
 	http.HandleFunc("/exit", handleExit)
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
