@@ -19,7 +19,7 @@ func (s *Appserver) Run() {
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
 
-	s.is_runned = true
+	s.Is_runned = true
 
 	http.ListenAndServe(":8080", nil)
 }
