@@ -1,3 +1,4 @@
+// Server package
 package server
 
 import (
@@ -13,7 +14,7 @@ type server struct {
 	router *simpleHttpRouter
 }
 
-func newServer() *server {
+func NewServer() *server {
 	s := &server{}
 	s.routes()
 	return s
@@ -23,20 +24,20 @@ func (s *server) ServeHTTP(w *http.ResponseWriter, r http.Request) {
 	s.router(ServeHTTP(w, r))
 }
 
-func handleAbout(w http.ResponseWriter, r *http.Request) {
+func HandleAbout(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
 	fmt.Fprintf(w, "Method [%v]\n", r.Method)
 	fmt.Fprintf(w, "Simple HTTP Server developed for GO switch program.\n")
 }
 
-func handleExit(w http.ResponseWriter, r *http.Request) {
+func HandleExit(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
 	fmt.Fprintf(w, "Method [%v]\n", r.Method)
 	fmt.Fprintf(w, "Closing Simple HTTP Server...\n")
 	os.Exit(1)
 }
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
+func HandleIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Process [%v] method...\n", r.Method)
 	switch r.Method {
 	case "GET":
