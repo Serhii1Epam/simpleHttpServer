@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Serhii1Epam/simpleHttpServer/internal/pkg/appserver"
+	"github.com/Serhii1Epam/simpleHttpServer/pkg/appserver"
 )
 
 func main() {

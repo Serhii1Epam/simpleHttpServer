@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Serhii1Epam/simpleHttpServer/internal/pkg/hasher"
+	"github.com/Serhii1Epam/simpleHttpServer/pkg/hasher"
 )
 
 func main() {

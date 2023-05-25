@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/Serhii1Epam/simpleHttpServer/internal/pkg/hasher"
+	_ "github.com/Serhii1Epam/simpleHttpServer/pkg/hasher"
 )
 
 type Appserver struct {
