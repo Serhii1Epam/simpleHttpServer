@@ -4,6 +4,7 @@ package appserver
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
@@ -19,7 +20,7 @@ func (s *Appserver) Run() {
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
 	s.is_runned = true
-	LogFatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {
