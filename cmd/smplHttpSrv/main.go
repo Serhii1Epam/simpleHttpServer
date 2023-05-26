@@ -5,7 +5,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/Serhii1Epam/simpleHttpServer/pkg/appserver"
 )
@@ -14,7 +13,6 @@ func main() {
 	fmt.Println("Simple HTTP Server start...")
 	defer fmt.Println("Simple HTTP Server finish work.")
 
-	srv1 := appserver.Appserver{Is_runned: false}
-
-	log.Fatal(srv1.Run())
+	srv1 := appserver.Appserver{is_runned: false, db: false}
+	srv1.Run()
 }

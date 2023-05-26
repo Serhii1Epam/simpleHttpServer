@@ -6,22 +6,20 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
-//	"github.com/Serhii1Epam/simpleHttpServer/pkg/hasher"
 )
 
 type Appserver struct {
-	Is_runned bool
+	db        bool
+	is_runned bool
 }
 
 func (s *Appserver) Run() {
+	s.db = true
 	http.HandleFunc("/exit", handleExit)
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
-
-	s.Is_runned = true
-
-	http.ListenAndServe(":8080", nil)
+	s.is_runned = true
+	LogFatal(http.ListenAndServe(":8080", nil))
 }
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {
