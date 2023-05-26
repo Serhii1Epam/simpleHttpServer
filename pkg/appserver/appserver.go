@@ -16,10 +16,10 @@ type Appserver struct {
 
 func (s *Appserver) Run() {
 	s.db = true
+	s.is_runned = true
 	http.HandleFunc("/exit", handleExit)
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
-	s.is_runned = true
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
