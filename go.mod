@@ -1,4 +1,4 @@
-module github.com/Serhii1Epam/simpleHttpServer.git
+module github.com/Serhii1Epam/simpleHttpServer
 
 go 1.20
 
