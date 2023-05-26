@@ -14,13 +14,14 @@ type Appserver struct {
 	is_runned bool
 }
 
-func (s *Appserver) Run() {
+func (s *Appserver) Run() *Appserver {
 	s.db = true
 	s.is_runned = true
 	http.HandleFunc("/exit", handleExit)
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/", handleIndex)
 	log.Fatal(http.ListenAndServe(":8080", nil))
+	return s
 }
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {

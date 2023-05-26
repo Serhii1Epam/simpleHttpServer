@@ -13,7 +13,5 @@ import (
 func main() {
 	fmt.Println("Simple HTTP Server start...")
 	defer fmt.Println("Simple HTTP Server finish work.")
-
-	srv1 := appserver.Appserver{is_runned: false, db: false}
-	srv1.Run()
+	srv := appserver.Appserver.Run()
 }
