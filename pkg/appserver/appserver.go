@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 )
 
 type Appserver struct {
@@ -39,7 +38,7 @@ func handleExit(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
 	fmt.Fprintf(w, "Method [%v]\n", r.Method)
 	fmt.Fprintf(w, "Closing Simple HTTP Server...\n")
-	os.Exit(1)
+	log.Panic("exit")
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
