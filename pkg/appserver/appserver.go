@@ -3,9 +3,8 @@
 package appserver
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -17,51 +16,76 @@ type Appserver struct {
 	is_runned bool
 }
 
-func New() *Appserver {
+func SrvNew() *Appserver {
 	return &Appserver{db: false, is_runned: false}
 }
 
-func (s *Appserver) Run() {
-	var err error
-	s.db = true
+func (s *Appserver) SrvClose() {
+	s.is_runned = false
+}
+
+func (s *Appserver) SrvRun() {
 	s.is_runned = true
 	http.HandleFunc("/about", handleAbout)
 	http.HandleFunc("/user/login", handleUserLogin)
 	http.HandleFunc("/user", handleUser)
 	http.HandleFunc("/", handleIndex)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
-	if err == nil {
-		log.Fatal(http.ListenAndServe(":8080", nil))
+func logMsgToWriter(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
+	fmt.Fprintf(w, "Method [%v]\n", r.Method)
+	fmt.Fprintf(w, "Content-Type: \"%s\"\n", r.Header.Get("Content-Type"))
+}
+
+func parseRequestBody(r *http.Request) *userdata.UserData {
+	req, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil
+	}
+	r.Body.Close()
+	switch r.Header.Get("Content-Type") {
+	case "application/json":
+		{
+			str := userdata.JsonBytes(req)
+			return userdata.Parse(&str)
+		}
+	default:
+		{
+			str := userdata.UndefinedBytes(req)
+			return userdata.Parse(&str)
+		}
 	}
 }
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "URL [%s]\n", r.URL.Path)
-	fmt.Fprintf(w, "Method [%v]\n", r.Method)
+	logMsgToWriter(w, r)
 	fmt.Fprintf(w, "Simple HTTP Server developed for GO switch program.\n")
 }
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Process handleUser...\n")
-
+	logMsgToWriter(w, r)
+	switch r.Method {
+	case "POST":
+		{
+			reqUserData := parseRequestBody(r)
+			reqUserData.LoginUser(w)
+		}
+	default:
+		{
+			fmt.Fprintf(w, "Server can't handle method [%v]. Continue...\n", r.Method)
+		}
+	}
 }
 
 func handleUserLogin(w http.ResponseWriter, r *http.Request) {
+	logMsgToWriter(w, r)
 	switch r.Method {
-	case "GET":
-		{
-			fmt.Fprintf(w, "Nothing to return in [%v] method. Continue...\n", r.Method)
-		}
 	case "POST":
 		{
-			fmt.Fprintf(w, "Process [%v] method...\n", r.Method)
-			var jsonVal userdata.UserData
-			body, err := ioutil.ReadAll(r.Body)
-			if err == nil {
-				json.Unmarshal(body, &jsonVal)
-			}
-			r.Body.Close()
-			fmt.Fprintf(w, "User : %s Password : %s\n", jsonVal.User, jsonVal.Password)
+			reqUserData := parseRequestBody(r)
+			reqUserData.LoginUser(w)
 		}
 	default:
 		{
@@ -72,5 +96,6 @@ func handleUserLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Continue ...\n")
+	logMsgToWriter(w, r)
+	fmt.Fprintf(w, "Try to use another endpoint.Continue ...\n")
 }
