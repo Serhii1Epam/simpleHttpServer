@@ -9,22 +9,37 @@ import (
 	"strings"
 )
 
+type HashingData struct {
+	Pass, Hash string
+}
+
+func NewHasher(p string) *HashingData {
+	return &HashingData{Pass: p}
+}
+
 // Hash the pasword
-func HashPassword(password string) (string, error) {
+func (h *HashingData) HashPassword() (string, error) {
 	hash := sha256.New()
-	numBytes, err := hash.Write([]byte(password))
-	if numBytes > 0 {
-		return fmt.Sprintf("%x", hash.Sum(nil)), err
+	numBytes, err := hash.Write([]byte(h.Pass))
+
+	if err == nil && numBytes > 0 {
+		h.Hash = string(hash.Sum(nil))
+		return fmt.Sprintf("%x", h.Hash), err
 	}
+
 	return "", err
 }
 
 // Check pasword hash
-func CheckPasswordHash(password, hash string) bool {
+func (h *HashingData) CheckPasswordHash(hashed string) bool {
 	ret := false
-	calculatedHash, _ := HashPassword(password)
-	if result := strings.Compare(hash, calculatedHash); result == 0 {
-		ret = true
+	calculatedHash, _ := h.HashPassword()
+
+	if h.Hash != "" {
+		if result := strings.Compare(calculatedHash, hashed); result == 0 {
+			ret = true
+		}
 	}
+
 	return ret
 }

@@ -11,6 +11,7 @@ import (
 
 func main() {
 	var arg string
+	var toHash hasher.HashingData
 
 	if len(os.Args) > 1 {
 		arg = os.Args[1]
@@ -20,7 +21,9 @@ func main() {
 		return
 	}
 
-	hash, err := hasher.HashPassword(arg)
+	//hash, err := hasher.HashPassword(arg)
+	toHash.Pass = arg
+	hash, err := toHash.HashPassword()
 
 	if err != nil {
 		fmt.Println("Hashing errors: arg => ", arg)
