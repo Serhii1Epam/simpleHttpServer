@@ -27,22 +27,20 @@ func NewUser() *UserData {
 }
 
 func (u *UserData) CreateUser(w http.ResponseWriter, db *appdb.Database) error {
-	fmt.Fprintf(w, "CreateUser = User : %s Password : %s\n", u.User, u.Password)
+	fmt.Fprintf(w, "CreateUser = User : %s\n", u.User)
 	hsr := hasher.NewHasher(u.Password)
-	calculated_hash, _ := hsr.HashPassword()
-	fmt.Fprintf(w, "hsr[%v]\n calc[%s]\n", hsr, calculated_hash)
+	hsr.HashPassword()
 	db.Insert(*hsr, u.User)
 	fmt.Fprintf(w, "DB: [%v]\n", db)
 	return nil
 }
 
 func (u *UserData) LoginUser(w http.ResponseWriter, db *appdb.Database) error {
-	fmt.Fprintf(w, "LoginUser = User : %s Password : %s\n", u.User, u.Password)
+	fmt.Fprintf(w, "LoginUser = User : %s\n", u.User)
 	hsr := hasher.NewHasher(u.Password)
-	if !hsr.CheckPasswordHash(string(db.Select(u.User))) {
-		fmt.Fprintf(w, "Invalid User:[%v], \n", u)
+	if res := hsr.CheckPasswordHash(db.Select(u.User)); res == false {
+		fmt.Fprintf(w, "Invalid User:[%v], from DB [%s]\n", u, db.Select(u.User))
 	}
-
 	return nil
 }
 

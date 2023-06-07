@@ -1,6 +1,4 @@
-/* Package implements lets-go-chat functions
- * Unlicensed.
- */
+/* Package implements simple HTTP server functions */
 package hasher
 
 import (
@@ -23,8 +21,8 @@ func (h *HashingData) HashPassword() (string, error) {
 	numBytes, err := hash.Write([]byte(h.Pass))
 
 	if err == nil && numBytes > 0 {
-		h.Hash = string(hash.Sum(nil))
-		return fmt.Sprintf("%x", h.Hash), err
+		h.Hash = fmt.Sprintf("%x", string(hash.Sum(nil)))
+		return h.Hash, err
 	}
 
 	return "", err
@@ -34,12 +32,10 @@ func (h *HashingData) HashPassword() (string, error) {
 func (h *HashingData) CheckPasswordHash(hashed string) bool {
 	ret := false
 	calculatedHash, _ := h.HashPassword()
-
 	if h.Hash != "" {
 		if result := strings.Compare(calculatedHash, hashed); result == 0 {
 			ret = true
 		}
 	}
-
 	return ret
 }
