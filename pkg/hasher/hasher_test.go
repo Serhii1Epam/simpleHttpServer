@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/Serhii1Epam/simpleHttpServer/pkg/hasher"
-	//"github.com/Serhii1Epam/simpleHttpServer/pkg/hasher"
 )
 
 /* Sha256 from "TestPass" == eddef9e8e578c2a560c3187c4152c8b6f3f90c1dcf8c88b386ac1a9a96079c2c
@@ -15,6 +14,11 @@ func TestCheckPasswordHash(t *testing.T) {
 	if !hasher.NewHasher("TestPass").CheckPasswordHash(want) {
 		t.Errorf("CheckPasswordHash() => want %q", want)
 	}
+
+	if hasher.NewHasher("TestPass").CheckPasswordHash("any") {
+		t.Errorf("CheckPasswordHash() => approved any hash)")
+	}
+
 }
 
 /* Sha256 from "TestPass1" == 4ee33bac59675856c9d8f9ddfaf21368a08f8afe7827516c6d031b8859064229

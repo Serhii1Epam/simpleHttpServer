@@ -2,8 +2,8 @@ package userdata
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/Serhii1Epam/simpleHttpServer/pkg/appdb"
@@ -20,47 +20,54 @@ type IParse interface {
 }
 
 type JsonBytes []byte
-type UndefinedBytes []byte
+type PlainTextBytes []byte
 
 func NewUser() *UserData {
 	return &UserData{}
 }
 
-func (u *UserData) CreateUser(w http.ResponseWriter, db *appdb.Database) error {
-	fmt.Fprintf(w, "CreateUser = User : %s\n", u.User)
-	hsr := hasher.NewHasher(u.Password)
-	hsr.HashPassword()
-	db.Insert(*hsr, u.User)
-	fmt.Fprintf(w, "DB: [%v]\n", db)
-	return nil
+func (u UserData) Print() {
+	fmt.Printf("User: [%s], Password: [%s]\n", u.User, u.Password)
 }
 
-func (u *UserData) LoginUser(w http.ResponseWriter, db *appdb.Database) error {
-	fmt.Fprintf(w, "LoginUser = User : %s\n", u.User)
-	hsr := hasher.NewHasher(u.Password)
-	if res := hsr.CheckPasswordHash(db.Select(u.User)); res == false {
-		fmt.Fprintf(w, "Invalid User:[%v], from DB [%s]\n", u, db.Select(u.User))
-	}
-	return nil
+func Parse(i IParse) *UserData {
+	return i.ParseBody()
 }
 
-func (in *JsonBytes) ParseBody() *UserData {
+func (in JsonBytes) ParseBody() *UserData {
 	inUser := NewUser()
-	json.Unmarshal(*in, &inUser)
+	json.Unmarshal(in, &inUser)
 	return inUser
-
 }
 
-func (in *UndefinedBytes) ParseBody() *UserData {
-	var data []byte = *in
+func (in PlainTextBytes) ParseBody() *UserData {
+	var data []byte = in
 	inUser := NewUser()
 	str := strings.Fields(string(data))
 	inUser.User = str[0]
 	inUser.Password = str[1]
 	return inUser
-
 }
 
-func Parse(i IParse) *UserData {
-	return i.ParseBody()
+func (u *UserData) Create(db *appdb.Database) error {
+	if db == nil {
+		return errors.New("Database isn't initialized")
+	}
+	hsr := hasher.NewHasher(u.Password)
+	hsr.HashPassword()
+	if err := db.Insert(*hsr, u.User); err != nil {
+		return errors.New("Error while inserting DB")
+	}
+	u.Print()
+	db.Print()
+	return nil
+}
+
+func (u *UserData) Login(db *appdb.Database) error {
+	hsr := hasher.NewHasher(u.Password)
+	if res := hsr.CheckPasswordHash(db.Select(u.User)); !res {
+		customMsg := fmt.Sprintf("Invalid User:[%v], from DB [%s]", u, db.Select(u.User))
+		return errors.New(customMsg)
+	}
+	return nil
 }
